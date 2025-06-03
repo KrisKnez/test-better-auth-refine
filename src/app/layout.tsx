@@ -1,11 +1,10 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import React, { Suspense } from "react";
-import { Refine, GitHubBanner } from "@refinedev/core";
+import { Refine } from "@refinedev/core";
 import { DevtoolsProvider } from "@providers/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import {
-  ThemedTitleV2,
   useNotificationProvider,
   RefineSnackbarProvider,
 } from "@refinedev/mui";
@@ -14,8 +13,10 @@ import routerProvider from "@refinedev/nextjs-router";
 import { dataProvider } from "@providers/data-provider";
 import { AppIcon } from "@components/app-icon";
 import { ColorModeContextProvider } from "@contexts/color-mode";
-import { Header } from "@components/header";
 import { authProviderClient } from "@providers/auth-provider/auth-provider.client";
+import { usersProvider } from "@providers/data-provider/users";
+
+import { MdGroup } from "react-icons/md";
 
 export const metadata: Metadata = {
   title: "Refine",
@@ -38,37 +39,33 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Suspense>
-          <GitHubBanner />
           <RefineKbarProvider>
             <ColorModeContextProvider defaultMode={defaultMode}>
               <RefineSnackbarProvider>
                 <DevtoolsProvider>
                   <Refine
                     routerProvider={routerProvider}
-                    dataProvider={dataProvider}
+                    dataProvider={{
+                      default: dataProvider,
+                      users: usersProvider,
+                    }}
                     notificationProvider={useNotificationProvider}
                     authProvider={authProviderClient}
                     resources={[
                       {
-                        name: "blog_posts",
-                        list: "/blog-posts",
-                        create: "/blog-posts/create",
-                        edit: "/blog-posts/edit/:id",
-                        show: "/blog-posts/show/:id",
-                        meta: {
-                          canDelete: true,
-                        },
+                        name: "Users",
+                        list: "/users",
+                        show: "/users/show/:id",
+                        // create: "/users/create",
+                        meta: { dataProviderName: "users",  icon: <MdGroup /> },
                       },
                       {
-                        name: "categories",
-                        list: "/categories",
-                        create: "/categories/create",
-                        edit: "/categories/edit/:id",
-                        show: "/categories/show/:id",
+                        name: "dashboard",
+                        options: { label: "Dashboard" },
                         meta: {
-                          canDelete: true,
+                          canDelete: false,
                         },
-                      },
+                      }
                     ]}
                     options={{
                       syncWithLocation: true,

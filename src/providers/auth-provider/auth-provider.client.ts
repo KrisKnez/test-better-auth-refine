@@ -1,83 +1,81 @@
 "use client";
 
 import type { AuthProvider } from "@refinedev/core";
-import Cookies from "js-cookie";
-
-const mockUsers = [
-  {
-    name: "John Doe",
-    email: "johndoe@mail.com",
-    roles: ["admin"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-  {
-    name: "Jane Doe",
-    email: "janedoe@mail.com",
-    roles: ["editor"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-];
+import { authClient } from "@/lib/auth-client";
 
 export const authProviderClient: AuthProvider = {
   login: async ({ email, username, password, remember }) => {
-    // Suppose we actually send a request to the back end here.
-    const user = mockUsers[0];
-
-    if (user) {
-      Cookies.set("auth", JSON.stringify(user), {
-        expires: 30, // 30 days
-        path: "/",
+    try {
+      const response = await authClient.signIn.email({
+        email,
+        password
       });
-      return {
-        success: true,
-        redirectTo: "/",
-      };
-    }
+      if (response.error) {
+        return {
+          success: false,
+          error: {
+            name: "LoginError",
+            message: response.error.message || "Invalid credentials",
+          },
+        };
+      }
 
-    return {
-      success: false,
-      error: {
-        name: "LoginError",
-        message: "Invalid username or password",
-      },
-    };
+      return { success: true, redirectTo: "/" };
+    } catch (error) {
+      return { success: false, error: { name: "LoginError", message: "An error occurred" } };
+    }
   },
   logout: async () => {
-    Cookies.remove("auth", { path: "/" });
+    await authClient.signOut();
     return {
       success: true,
-      redirectTo: "/login",
+      redirectTo: "/login"
     };
   },
   check: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
+    const session = await authClient.getSession();
+
+    if (session.data === null || session.error)
       return {
-        authenticated: true,
+        authenticated: false,
+        logout: true,
+        redirectTo: "/login",
       };
-    }
 
     return {
-      authenticated: false,
-      logout: true,
-      redirectTo: "/login",
+      authenticated: true,
+      redirectTo: "/",
     };
   },
   getPermissions: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
-      const parsedUser = JSON.parse(auth);
-      return parsedUser.roles;
+    try {
+      const session = await authClient.getSession();
+      if (session.error) {
+        return null;
+      }
+
+      return ["admin", "editor"]; // Example roles, replace with actual logic
+    } catch (error) {
+      return null;
     }
-    return null;
   },
   getIdentity: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
-      const parsedUser = JSON.parse(auth);
-      return parsedUser;
+    try {
+      const session = await authClient.getSession();
+      if (session.error) {
+        return null;
+      }
+
+      return {
+        id: session.data?.user.id,
+        name: session.data?.user.name,
+        email: session.data?.user.email,
+        avatar: session.data?.user.image || "https://i.pravatar.cc/150?img=1", // Default avatar if not provided
+        roles: [], // Assuming roles are part of the user object
+      };
+    } catch (error) {
+      return null;
     }
-    return null;
   },
   onError: async (error) => {
     if (error.response?.status === 401) {
@@ -87,5 +85,40 @@ export const authProviderClient: AuthProvider = {
     }
 
     return { error };
+  },
+  register: async ({
+    email,
+    password
+  }) => {
+    try {
+      const response = await authClient.signUp.email({
+        email,
+        password,
+        name: email, // Assuming name is the same as email for simplicity
+      });
+
+      if (response.error) {
+        return {
+          success: false,
+          error: {
+            name: "RegisterError",
+            message: response.error.message || "Registration failed",
+          },
+        };
+      }
+
+      return {
+        success: true,
+        redirectTo: "/login",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          name: "RegisterError",
+          message: "Registration failed",
+        },
+      };
+    }
   },
 };
