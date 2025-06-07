@@ -1,17 +1,17 @@
 "use client";
 
 import { authClient } from "@lib/auth-client";
-import { Card, CardContent, List, Paper, Stack, Typography } from "@mui/material";
+import { Card, CardContent, Stack, TextField, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DateTimeField } from "@mui/x-date-pickers";
 import { useShow } from "@refinedev/core";
 import {
-  DateField,
-  EmailField,
   Show,
-  TextFieldComponent as TextField,
+  DateField,
   useDataGrid,
 } from "@refinedev/mui";
 import React from "react";
+import dayjs from "dayjs";
 
 export default function BlogPostShow() {
   const { query } = useShow({});
@@ -39,15 +39,15 @@ export default function BlogPostShow() {
         headerAlign: "left",
       },
       {
-        field: "userAgent",
-        headerName: "User Agent",
+        field: "ipAddress",
+        headerName: "IP Address",
         minWidth: 200,
         display: "flex",
         flex: 1,
       },
       {
-        field: "ipAddress",
-        headerName: "IP Address",
+        field: "userAgent",
+        headerName: "User Agent",
         minWidth: 200,
         display: "flex",
         flex: 1,
@@ -78,32 +78,62 @@ export default function BlogPostShow() {
 
   return (
     <Stack spacing={2}>
-      <Show isLoading={isLoading}>
-        <Stack gap={1}>
-          <Typography variant="body1" fontWeight="bold">
-            {"ID"}
-          </Typography>
-          <TextField value={record?.id} />
+      <Show isLoading={isLoading} >
+        <Stack gap={3}>
+          <TextField
+            type="text"
+            label={"ID"}
+            defaultValue={record?.id || ""}
+            fullWidth
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { readOnly: true },
+            }}
+          />
 
-          <Typography variant="body1" fontWeight="bold">
-            {"Name"}
-          </Typography>
-          <TextField value={record?.name} />
+          <TextField
+            type="text"
+            label={"Name"}
+            defaultValue={record?.name || ""}
+            fullWidth
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { readOnly: true },
+            }}
+          />
 
-          <Typography variant="body1" fontWeight="bold">
-            {"Email"}
-          </Typography>
-          <EmailField value={record?.email} />
+          <TextField
+            type="email"
+            label={"Email"}
+            defaultValue={record?.email || ""}
+            fullWidth
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { readOnly: true },
+            }}
+          />
 
-          <Typography variant="body1" fontWeight="bold">
-            {"CreatedAt"}
-          </Typography>
-          <DateField value={record?.createdAt} format="MMMM D, YYYY h:mm A" />
+          <DateTimeField
+            label={"Created At"}
+            defaultValue={dayjs(record?.createdAt)}
+            slotProps={{
+              textField: {
+                readOnly: true,
+              }
+            }}
+            fullWidth
+          />
 
-          <Typography variant="body1" fontWeight="bold">
-            {"UpdatedAt"}
-          </Typography>
-          <DateField value={record?.updatedAt} format="MMMM D, YYYY h:mm A" />
+          <DateTimeField
+            label={"Updated At"}
+            defaultValue={dayjs(record?.updatedAt)}
+            slotProps={{
+              textField: {
+                readOnly: true,
+              }
+            }}
+            fullWidth
+          />
         </Stack>
       </Show>
 

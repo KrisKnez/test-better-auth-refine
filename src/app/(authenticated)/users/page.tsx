@@ -119,6 +119,7 @@ export default function UsersList() {
         sortable: false,
         display: "flex",
         flex: 1,
+        
         renderCell: function render({ row }) {
           return (
             <>
