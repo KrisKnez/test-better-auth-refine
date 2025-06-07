@@ -16,7 +16,7 @@ import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProviderClient } from "@providers/auth-provider/auth-provider.client";
 import { usersProvider } from "@providers/data-provider/users";
 
-import { MdGroup } from "react-icons/md";
+import { MdGroup, MdPerson, MdSecurity, MdTerminal } from "react-icons/md";
 import { sessionsProvider } from "@providers/data-provider/sessions";
 
 import ClientLocalizationProvider from "@lib/client-localization-provider";
@@ -57,23 +57,32 @@ export default function RootLayout({
                     authProvider={authProviderClient}
                     resources={[
                       {
+                        name: "Profile",
+                        options: { label: "Profile" },
+                        list: "/profile",
+                        meta: {
+                          icon: <MdPerson />,
+                        }
+                      },
+                      {
+                        name: "Security",
+                        options: { label: "Security" },
+                        list: "/security",
+                        meta: {
+                          icon: <MdSecurity />,
+                        }
+                      },
+                      {
+                        name: "Admin",
+                        options: { label: "Admin" },
+                        meta: { icon: <MdTerminal /> },
+                      },
+                      {
                         name: "Users",
                         list: "/users",
                         show: "/users/show/:id",
-                        // create: "/users/create",
-                        meta: { dataProviderName: "users", icon: <MdGroup /> },
+                        meta: { dataProviderName: "users", icon: <MdGroup />, parent: "Admin" },
                       },
-                      {
-                        name: "Sessions",
-                        show: "/users/:userId/sessions/:id",
-                      },
-                      {
-                        name: "dashboard",
-                        options: { label: "Dashboard" },
-                        meta: {
-                          canDelete: false,
-                        },
-                      }
                     ]}
                     options={{
                       syncWithLocation: true,
