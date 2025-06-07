@@ -12,7 +12,7 @@ import {
   useDataGrid,
 } from "@refinedev/mui";
 import React from "react";
-import { MdCheck, MdCheckCircleOutline, MdCancel } from "react-icons/md";
+import { MdCancel } from "react-icons/md";
 
 export default function UsersList() {
   const { dataGridProps } = useDataGrid({
@@ -27,6 +27,7 @@ export default function UsersList() {
         type: "number",
         minWidth: 50,
         display: "flex",
+        flex: 1,
         align: "left",
         headerAlign: "left",
       },
@@ -35,12 +36,14 @@ export default function UsersList() {
         headerName: "Name",
         minWidth: 200,
         display: "flex",
+        flex: 1,
       },
       {
         field: "email",
         headerName: "Email",
         minWidth: 200,
         display: "flex",
+        flex: 1,
         renderCell: function render({ value, row }) {
           return <Stack direction={"row"} alignItems="center" justifyContent="center" gap={1}>
             <TextFieldComponent value={value} />
@@ -65,20 +68,12 @@ export default function UsersList() {
           </Stack>;
         },
       },
-      // {
-      //   field: "emailVerified",
-      //   headerName: "Email Verified",
-      //   minWidth: 150,
-      //   display: "flex",
-      //   renderCell: function render({ value }) {
-      //     return value ? "Yes" : "No";
-      //   },
-      // },
       {
         field: "role",
         headerName: "Role",
         minWidth: 150,
         display: "flex",
+        flex: 1,
         renderCell: function render({ value }) {
           return (
             <TextFieldComponent value={value} />
@@ -90,6 +85,7 @@ export default function UsersList() {
         headerName: "Banned",
         minWidth: 100,
         display: "flex",
+        flex: 1,
         renderCell: function render({ value }) {
           return <TextFieldComponent value={value ? "Yes" : "No"} />
         },
@@ -99,6 +95,7 @@ export default function UsersList() {
         headerName: "Created At",
         minWidth: 150,
         display: "flex",
+        flex: 1,
         renderCell: function render({ value }) {
           return <DateField value={value} format="MMMM D, YYYY h:mm A" />;
         },
@@ -108,6 +105,7 @@ export default function UsersList() {
         headerName: "Updated At",
         minWidth: 150,
         display: "flex",
+        flex: 1,
         renderCell: function render({ value }) {
           return <DateField value={value} format="MMMM D, YYYY h:mm A" />;
         },
@@ -120,6 +118,7 @@ export default function UsersList() {
         minWidth: 120,
         sortable: false,
         display: "flex",
+        flex: 1,
         renderCell: function render({ row }) {
           return (
             <>
@@ -131,7 +130,7 @@ export default function UsersList() {
         },
       },
     ],
-    [dataGridProps]
+    []
   );
 
   return (

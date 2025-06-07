@@ -1,19 +1,17 @@
 "use client";
 
 import { authClient } from "@lib/auth-client";
-import { List, Stack, Typography } from "@mui/material";
+import { Card, CardContent, List, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useOne, useShow } from "@refinedev/core";
+import { useShow } from "@refinedev/core";
 import {
   DateField,
   EmailField,
-  MarkdownField,
-  NumberField,
   Show,
   TextFieldComponent as TextField,
+  useDataGrid,
 } from "@refinedev/mui";
 import React from "react";
-import useSWR from "swr";
 
 export default function BlogPostShow() {
   const { query } = useShow({});
@@ -22,13 +20,12 @@ export default function BlogPostShow() {
 
   const record = data?.data;
 
-  const sessions = useSWR([
-    "authClient.admin.listUserSessions",
-    record?.id as string || "",
-  ], () => authClient.admin.listUserSessions({
-    userId: record?.id as string || "",
-  }))
-
+  const { dataGridProps } = useDataGrid<ReturnType<typeof authClient.admin.listUserSessions>>({
+    dataProviderName: "sessions",
+    meta: {
+      userId: record?.id,
+    }
+  });
   const sessionsColumns = React.useMemo<GridColDef[]>(
     () => [
       {
@@ -37,32 +34,30 @@ export default function BlogPostShow() {
         type: "number",
         minWidth: 50,
         display: "flex",
+        flex: 1,
         align: "left",
         headerAlign: "left",
-      },
-      {
-        field: "token",
-        headerName: "Token",
-        minWidth: 150,
-        display: "flex",
       },
       {
         field: "userAgent",
         headerName: "User Agent",
         minWidth: 200,
         display: "flex",
+        flex: 1,
       },
       {
         field: "ipAddress",
         headerName: "IP Address",
         minWidth: 200,
         display: "flex",
+        flex: 1,
       },
       {
         field: "createdAt",
         headerName: "Created At",
         minWidth: 150,
         display: "flex",
+        flex: 1,
         renderCell: function render({ value }) {
           return <DateField value={value} format="MMMM D, YYYY h:mm A" />;
         },
@@ -72,49 +67,54 @@ export default function BlogPostShow() {
         headerName: "Expires At",
         minWidth: 150,
         display: "flex",
+        flex: 1,
         renderCell: function render({ value }) {
           return <DateField value={value} format="MMMM D, YYYY h:mm A" />;
         },
       },
     ],
-    [sessions]
+    []
   );
 
   return (
-    <Show isLoading={isLoading}>
-      <Stack gap={1}>
-        <Typography variant="body1" fontWeight="bold">
-          {"ID"}
-        </Typography>
-        <TextField value={record?.id} />
+    <Stack spacing={2}>
+      <Show isLoading={isLoading}>
+        <Stack gap={1}>
+          <Typography variant="body1" fontWeight="bold">
+            {"ID"}
+          </Typography>
+          <TextField value={record?.id} />
 
-        <Typography variant="body1" fontWeight="bold">
-          {"Name"}
-        </Typography>
-        <TextField value={record?.name} />
+          <Typography variant="body1" fontWeight="bold">
+            {"Name"}
+          </Typography>
+          <TextField value={record?.name} />
 
-        <Typography variant="body1" fontWeight="bold">
-          {"Email"}
-        </Typography>
-        <EmailField value={record?.email} />
+          <Typography variant="body1" fontWeight="bold">
+            {"Email"}
+          </Typography>
+          <EmailField value={record?.email} />
 
-        <Typography variant="body1" fontWeight="bold">
-          {"CreatedAt"}
-        </Typography>
-        <DateField value={record?.createdAt} format="MMMM D, YYYY h:mm A" />
+          <Typography variant="body1" fontWeight="bold">
+            {"CreatedAt"}
+          </Typography>
+          <DateField value={record?.createdAt} format="MMMM D, YYYY h:mm A" />
 
-        <Typography variant="body1" fontWeight="bold">
-          {"UpdatedAt"}
-        </Typography>
-        <DateField value={record?.updatedAt} format="MMMM D, YYYY h:mm A" />
+          <Typography variant="body1" fontWeight="bold">
+            {"UpdatedAt"}
+          </Typography>
+          <DateField value={record?.updatedAt} format="MMMM D, YYYY h:mm A" />
+        </Stack>
+      </Show>
 
-        <Typography variant="body1" fontWeight="bold">
-          {"Sessions"}
-        </Typography>
-        <List>
-          <DataGrid rows={sessions.data?.data?.sessions || []} columns={sessionsColumns} />
-        </List>
-      </Stack>
-    </Show>
+      <Card>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            User Sessions
+          </Typography>
+          <DataGrid {...dataGridProps} columns={sessionsColumns} />
+        </CardContent>
+      </Card>
+    </Stack>
   );
 }

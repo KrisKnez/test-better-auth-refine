@@ -4,22 +4,24 @@ import { authClient } from "@lib/auth-client";
 import { DataProvider } from "@refinedev/core";
 
 
-export const usersProvider: DataProvider = {
+export const sessionsProvider: DataProvider = {
     getList: async ({ resource, pagination, sorters, filters, meta }) => {
-        const { data, error } = await authClient.admin.listUsers({
-            query: {
-                limit: pagination?.pageSize || 10,
-                offset: pagination?.current ? (pagination.current - 1) * (pagination.pageSize || 10) : 0,
-            }
-        });
+        // Ensure userId is present
+        const userId = meta?.userId;
+        if (!userId)
+            throw new Error("userId is required to fetch sessions.");
+
+        const { data, error } = await authClient.admin.listUserSessions({
+            userId,
+        })
 
         if (error) {
             throw new Error(error.message || "Failed to fetch users");
         }
 
         return {
-            data: data?.users as any,
-            total: data?.total
+            data: data?.sessions as any,
+            total: data?.sessions.length || 0
         }
     },
     create: async ({ resource, variables, meta }) => {
@@ -32,21 +34,7 @@ export const usersProvider: DataProvider = {
         throw new Error("Not implemented");
     },
     getOne: async ({ resource, id, meta }) => {
-        const { data, error } = await authClient.admin.listUsers({
-            query: {
-                filterField: "id",
-                filterOperator: "eq",
-                filterValue: id,
-            }
-        });
-
-        if (error) {
-            throw new Error(error.message || "Failed to fetch user");
-        }
-
-        return {
-            data: data?.users?.[0] as any || null,
-        };
+        throw new Error("Not implemented");
     },
     getApiUrl: () => "",
     // optional methods

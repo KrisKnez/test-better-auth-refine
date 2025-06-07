@@ -17,6 +17,7 @@ import { authProviderClient } from "@providers/auth-provider/auth-provider.clien
 import { usersProvider } from "@providers/data-provider/users";
 
 import { MdGroup } from "react-icons/md";
+import { sessionsProvider } from "@providers/data-provider/sessions";
 
 export const metadata: Metadata = {
   title: "Refine",
@@ -48,6 +49,7 @@ export default function RootLayout({
                     dataProvider={{
                       default: dataProvider,
                       users: usersProvider,
+                      sessions: sessionsProvider,
                     }}
                     notificationProvider={useNotificationProvider}
                     authProvider={authProviderClient}
@@ -58,6 +60,10 @@ export default function RootLayout({
                         show: "/users/show/:id",
                         // create: "/users/create",
                         meta: { dataProviderName: "users",  icon: <MdGroup /> },
+                      },
+                      {
+                        name: "Sessions",
+                        show: "/users/:userId/sessions/:id",
                       },
                       {
                         name: "dashboard",
