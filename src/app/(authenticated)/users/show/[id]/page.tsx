@@ -21,7 +21,7 @@ export default function BlogPostShow() {
   const record = data?.data;
 
   const { dataGridProps } = useDataGrid<ReturnType<typeof authClient.admin.listUserSessions>>({
-    dataProviderName: "sessions",
+    dataProviderName: "adminSessions",
     meta: {
       userId: record?.id,
     }

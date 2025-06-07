@@ -4,18 +4,24 @@ import { authClient } from "@lib/auth-client";
 import { DataProvider } from "@refinedev/core";
 
 
-export const sessionsProvider: DataProvider = {
+export const adminSessionsProvider: DataProvider = {
     getList: async ({ resource, pagination, sorters, filters, meta }) => {
-        const { data, error } = await authClient.listSessions({
+        // Ensure userId is present
+        const userId = meta?.userId;
+        if (!userId)
+            throw new Error("userId is required to fetch sessions.");
+
+        const { data, error } = await authClient.admin.listUserSessions({
+            userId,
         })
 
         if (error) {
-            throw new Error(error.message || "Failed to fetch sessions");
+            throw new Error(error.message || "Failed to fetch users");
         }
 
         return {
-            data: data as any,
-            total: data.length
+            data: data?.sessions as any,
+            total: data?.sessions.length || 0
         }
     },
     create: async ({ resource, variables, meta }) => {

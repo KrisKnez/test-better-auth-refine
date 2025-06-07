@@ -16,10 +16,11 @@ import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProviderClient } from "@providers/auth-provider/auth-provider.client";
 import { usersProvider } from "@providers/data-provider/users";
 
-import { MdGroup, MdPerson, MdSecurity, MdTerminal } from "react-icons/md";
-import { sessionsProvider } from "@providers/data-provider/sessions";
+import { MdGroup, MdHouse, MdSecurity, MdTerminal } from "react-icons/md";
+import { adminSessionsProvider } from "@providers/data-provider/admin/sessions";
 
 import ClientLocalizationProvider from "@lib/client-localization-provider";
+import { sessionsProvider } from "@providers/data-provider/sessions";
 
 export const metadata: Metadata = {
   title: "Refine",
@@ -52,16 +53,17 @@ export default function RootLayout({
                       default: dataProvider,
                       users: usersProvider,
                       sessions: sessionsProvider,
+                      adminSessions: adminSessionsProvider,
                     }}
                     notificationProvider={useNotificationProvider}
                     authProvider={authProviderClient}
                     resources={[
                       {
-                        name: "Profile",
-                        options: { label: "Profile" },
-                        list: "/profile",
+                        name: "Home",
+                        options: { label: "Home" },
+                        list: "/home",
                         meta: {
-                          icon: <MdPerson />,
+                          icon: <MdHouse size={22} />,
                         }
                       },
                       {
@@ -69,19 +71,19 @@ export default function RootLayout({
                         options: { label: "Security" },
                         list: "/security",
                         meta: {
-                          icon: <MdSecurity />,
+                          icon: <MdSecurity size={22} />,
                         }
                       },
                       {
                         name: "Admin",
                         options: { label: "Admin" },
-                        meta: { icon: <MdTerminal /> },
+                        meta: { icon: <MdTerminal size={22} /> },
                       },
                       {
                         name: "Users",
                         list: "/users",
                         show: "/users/show/:id",
-                        meta: { dataProviderName: "users", icon: <MdGroup />, parent: "Admin" },
+                        meta: { dataProviderName: "users", icon: <MdGroup size={22} />, parent: "Admin" },
                       },
                     ]}
                     options={{
