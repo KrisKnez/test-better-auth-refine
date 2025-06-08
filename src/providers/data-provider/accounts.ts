@@ -3,23 +3,18 @@
 import { authClient } from "@lib/auth-client";
 import { DataProvider } from "@refinedev/core";
 
-
-export const adminUsersProvider: DataProvider = {
+export const accountsProvider: DataProvider = {
     getList: async ({ resource, pagination, sorters, filters, meta }) => {
-        const { data, error } = await authClient.admin.listUsers({
-            query: {
-                limit: pagination?.pageSize || 10,
-                offset: pagination?.current ? (pagination.current - 1) * (pagination.pageSize || 10) : 0,
-            }
-        });
+        const { data, error } = await authClient.listAccounts({
+        })
 
         if (error) {
-            throw new Error(error.message || "Failed to fetch users");
+            throw new Error(error.message || "Failed to fetch sessions");
         }
 
         return {
-            data: data?.users as any,
-            total: data?.total
+            data: data as any,
+            total: data.length
         }
     },
     create: async ({ resource, variables, meta }) => {
@@ -32,21 +27,7 @@ export const adminUsersProvider: DataProvider = {
         throw new Error("Not implemented");
     },
     getOne: async ({ resource, id, meta }) => {
-        const { data, error } = await authClient.admin.listUsers({
-            query: {
-                filterField: "id",
-                filterOperator: "eq",
-                filterValue: id,
-            }
-        });
-
-        if (error) {
-            throw new Error(error.message || "Failed to fetch user");
-        }
-
-        return {
-            data: data?.users?.[0] as any || null,
-        };
+        throw new Error("Not implemented");
     },
     getApiUrl: () => "",
     // optional methods

@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@lib/auth-client";
-import { Card, CardContent, Stack, TextField, Typography } from "@mui/material";
+import { Card, CardContent, CardHeader, Stack, TextField, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useShow } from "@refinedev/core";
@@ -14,7 +14,9 @@ import React from "react";
 import dayjs from "dayjs";
 
 export default function BlogPostShow() {
-  const { query } = useShow({});
+  const { query } = useShow({
+    dataProviderName: "adminUsers",
+  });
 
   const { data, isLoading } = query;
 
@@ -138,10 +140,8 @@ export default function BlogPostShow() {
       </Show>
 
       <Card>
+        <CardHeader title="User Sessions" />
         <CardContent>
-          <Typography variant="h6" gutterBottom>
-            User Sessions
-          </Typography>
           <DataGrid {...dataGridProps} columns={sessionsColumns} />
         </CardContent>
       </Card>

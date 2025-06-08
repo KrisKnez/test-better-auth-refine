@@ -14,13 +14,15 @@ import { dataProvider } from "@providers/data-provider";
 import { AppIcon } from "@components/app-icon";
 import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProviderClient } from "@providers/auth-provider/auth-provider.client";
-import { usersProvider } from "@providers/data-provider/users";
+import { adminUsersProvider } from "@providers/data-provider/users";
 
 import { MdGroup, MdHouse, MdSecurity, MdTerminal } from "react-icons/md";
 import { adminSessionsProvider } from "@providers/data-provider/admin/sessions";
 
 import ClientLocalizationProvider from "@lib/client-localization-provider";
 import { sessionsProvider } from "@providers/data-provider/sessions";
+import { accountsProvider } from "@providers/data-provider/accounts";
+import { accessControlProvider } from "@providers/access-control-provider";
 
 export const metadata: Metadata = {
   title: "Refine",
@@ -29,6 +31,13 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
 };
+
+// export enum Resources {
+//   Home = "Home",
+//   Security = "Security",
+//   Admin = "Admin",
+//   Users = "Users",
+// }
 
 export default function RootLayout({
   children,
@@ -51,12 +60,14 @@ export default function RootLayout({
                     routerProvider={routerProvider}
                     dataProvider={{
                       default: dataProvider,
-                      users: usersProvider,
                       sessions: sessionsProvider,
+                      accounts: accountsProvider,
+                      adminUsers: adminUsersProvider,
                       adminSessions: adminSessionsProvider,
                     }}
                     notificationProvider={useNotificationProvider}
                     authProvider={authProviderClient}
+                    accessControlProvider={accessControlProvider}
                     resources={[
                       {
                         name: "Home",
@@ -64,6 +75,7 @@ export default function RootLayout({
                         list: "/home",
                         meta: {
                           icon: <MdHouse size={22} />,
+                          test: "kiki",
                         }
                       },
                       {
@@ -83,7 +95,7 @@ export default function RootLayout({
                         name: "Users",
                         list: "/users",
                         show: "/users/show/:id",
-                        meta: { dataProviderName: "users", icon: <MdGroup size={22} />, parent: "Admin" },
+                        meta: { icon: <MdGroup size={22} />, parent: "Admin" },
                       },
                     ]}
                     options={{

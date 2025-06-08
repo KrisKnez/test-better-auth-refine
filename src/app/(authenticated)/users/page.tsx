@@ -16,7 +16,7 @@ import { MdCancel } from "react-icons/md";
 
 export default function UsersList() {
   const { dataGridProps } = useDataGrid({
-    syncWithLocation: true,
+    dataProviderName: "adminUsers",
   });
 
   const columns = React.useMemo<GridColDef[]>(
@@ -119,7 +119,7 @@ export default function UsersList() {
         sortable: false,
         display: "flex",
         flex: 1,
-        
+
         renderCell: function render({ row }) {
           return (
             <>
