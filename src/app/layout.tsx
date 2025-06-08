@@ -16,7 +16,7 @@ import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProviderClient } from "@providers/auth-provider/auth-provider.client";
 import { adminUsersProvider } from "@providers/data-provider/users";
 
-import { MdGroup, MdHouse, MdSecurity, MdTerminal } from "react-icons/md";
+import { MdAccountCircle, MdGroup, MdGroups, MdHouse, MdPerson, MdSecurity, MdTerminal } from "react-icons/md";
 import { adminSessionsProvider } from "@providers/data-provider/admin/sessions";
 
 import ClientLocalizationProvider from "@lib/client-localization-provider";
@@ -79,11 +79,11 @@ export default function RootLayout({
                         }
                       },
                       {
-                        name: "Security",
-                        options: { label: "Security" },
-                        list: "/security",
+                        name: "Account",
+                        options: { label: "Account" },
+                        list: "/account",
                         meta: {
-                          icon: <MdSecurity size={22} />,
+                          icon: <MdAccountCircle size={22} />,
                         }
                       },
                       {
@@ -93,9 +93,15 @@ export default function RootLayout({
                       },
                       {
                         name: "Users",
-                        list: "/users",
-                        show: "/users/show/:id",
-                        meta: { icon: <MdGroup size={22} />, parent: "Admin" },
+                        list: "/admin/users",
+                        show: "/admin/users/show/:id",
+                        meta: { icon: <MdPerson size={22} />, parent: "Admin" },
+                      },
+                      {
+                        name: "Organizations",
+                        list: "/admin/organizations",
+                        show: "/admin/organizations/show/:id",
+                        meta: { icon: <MdGroups size={22} />, parent: "Admin" },
                       },
                     ]}
                     options={{

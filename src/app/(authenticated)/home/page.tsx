@@ -10,6 +10,8 @@ export default function ProfilePage() {
 
     const profileImage = data?.user.image
 
+    authClient.organization.list().then(res => console.log("kk:", res));
+
     return (
         <Container maxWidth="md">
             <Stack alignItems="center">

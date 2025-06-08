@@ -94,7 +94,7 @@ export const authProviderClient: AuthProvider = {
       const response = await authClient.signUp.email({
         email,
         password,
-        name: email, // Assuming name is the same as email for simplicity
+        name: "", // Assuming name is the same as email for simplicity
       });
 
       if (response.error) {

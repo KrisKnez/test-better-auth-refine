@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { openAPI } from "better-auth/plugins";
+import { openAPI, organization } from "better-auth/plugins";
 import { admin } from "better-auth/plugins"
 
 import { MongoClient } from "mongodb";
@@ -11,8 +11,9 @@ const db = client.db();
 export const auth = betterAuth({
     database: mongodbAdapter(db),
     plugins: [
+        admin(),
         openAPI(),
-        admin()
+        organization()
     ],
     user: {
         changeEmail: {
@@ -25,6 +26,7 @@ export const auth = betterAuth({
     },
     emailAndPassword: {
         enabled: true,
+        autoSignIn: false,
         async sendResetPassword(data, request) {
             // Implement your email sending logic here
             console.log("Sending reset password email to:", data.user.email);
